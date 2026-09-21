@@ -1,112 +1,135 @@
 import { useState } from 'react'
-import { RevealOnScroll, StaggerItem, StaggerReveal } from './RevealOnScroll'
+import { AnimatePresence, motion } from 'motion/react'
+import { Plus, Star } from 'lucide-react'
+import { categorias } from '../data/menu'
+import type { Item } from '../data/menu'
+import { useCart } from '../lib/cart'
+import { RevealOnScroll } from './RevealOnScroll'
 
-type Categoria = 'Desayunos' | 'Bebidas' | 'Postres'
-
-interface Platillo {
-  nombre: string
-  descripcion: string
-  precio: string
-  categoria: Categoria
+function AddBtn({ item, tam, precio }: { item: Item; tam: 'unico' | 'chico' | 'grande'; precio: number }) {
+  const { add } = useCart()
+  const [ok, setOk] = useState(false)
+  const label = tam === 'unico' ? '' : tam === 'chico' ? 'Ch ' : 'Gde '
+  return (
+    <button
+      onClick={() => {
+        add({ key: `${item.id}|${tam}`, nombre: item.nombre, tam, precio })
+        setOk(true)
+        setTimeout(() => setOk(false), 700)
+      }}
+      aria-label={`Agregar ${item.nombre} ${tam === 'unico' ? '' : tam}`}
+      className={`font-mono-label group inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition-colors ${
+        ok
+          ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white'
+          : 'border-[var(--color-line)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]'
+      }`}
+    >
+      {label}${precio}
+      <Plus size={12} className={`transition-transform ${ok ? 'rotate-90' : ''}`} />
+    </button>
+  )
 }
 
-const platillos: Platillo[] = [
-  {
-    nombre: 'Huevos al gusto',
-    descripcion: 'Con frijoles, pan artesanal y fruta de temporada.',
-    precio: '$95',
-    categoria: 'Desayunos',
-  },
-  {
-    nombre: 'Hot cakes de temporada',
-    descripcion: 'Con fruta fresca y miel de la casa.',
-    precio: '$85',
-    categoria: 'Desayunos',
-  },
-  {
-    nombre: 'Chilaquiles verdes',
-    descripcion: 'Con pollo deshebrado y crema.',
-    precio: '$105',
-    categoria: 'Desayunos',
-  },
-  {
-    nombre: 'Cafe de olla',
-    descripcion: 'Grano de la region, tueste medio.',
-    precio: '$45',
-    categoria: 'Bebidas',
-  },
-  {
-    nombre: 'Latte de especialidad',
-    descripcion: 'Espresso doble con leche vaporizada.',
-    precio: '$55',
-    categoria: 'Bebidas',
-  },
-  {
-    nombre: 'Te de hierbas',
-    descripcion: 'Mezcla de la casa, servido caliente o frio.',
-    precio: '$40',
-    categoria: 'Bebidas',
-  },
-  {
-    nombre: 'Pastel de queso',
-    descripcion: 'Receta clasica, hecho en casa cada manana.',
-    precio: '$65',
-    categoria: 'Postres',
-  },
-  {
-    nombre: 'Croissant relleno',
-    descripcion: 'Rotacion semanal de sabores.',
-    precio: '$50',
-    categoria: 'Postres',
-  },
-]
-
-const categorias: Categoria[] = ['Desayunos', 'Bebidas', 'Postres']
-
+/**
+ * Menu completo (datos reales del sitio actual) con:
+ * - tabs pegajosos y scrolleables (antes: una lista plana sin fotos)
+ * - separacion por grupos, favoritos marcados
+ * - boton "+" por producto/tamaño que alimenta el pedido por WhatsApp
+ */
 export function Menu() {
-  const [activa, setActiva] = useState<Categoria>('Desayunos')
+  const [activa, setActiva] = useState(categorias[0].id)
+  const cat = categorias.find((c) => c.id === activa)!
 
   return (
-    <section id="menu" className="border-t border-[var(--color-line)] px-6 py-24">
-      <div className="mx-auto max-w-4xl">
+    <section id="menu" className="border-t border-[var(--color-line)] py-24">
+      <div className="mx-auto max-w-4xl px-6">
         <RevealOnScroll className="text-center">
-          <span className="font-mono-label text-xs text-[var(--color-accent)]">Nuestro menu</span>
-          <h2 className="mt-4 text-4xl font-medium tracking-tight md:text-5xl">
-            Hecho fresco cada dia
+          <span className="font-mono-label text-xs text-[var(--color-accent)]">Nuestro menú</span>
+          <h2 className="font-display mt-4 text-4xl font-medium tracking-tight md:text-5xl">
+            Elige, agrega y pide
           </h2>
+          <p className="mx-auto mt-3 max-w-md text-[var(--color-muted)]">
+            Toca el precio para sumarlo a tu pedido. Al final lo enviamos por WhatsApp.
+          </p>
         </RevealOnScroll>
+      </div>
 
-        <div className="mt-10 flex justify-center gap-2">
-          {categorias.map((cat) => (
+      <div className="sticky top-0 z-30 mt-10 border-y border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_88%,transparent)] backdrop-blur-md">
+        <div role="tablist" className="mx-auto flex max-w-4xl gap-2 overflow-x-auto px-6 py-3 [scrollbar-width:none]">
+          {categorias.map((c) => (
             <button
-              key={cat}
-              onClick={() => setActiva(cat)}
-              className={`font-mono-label rounded-full border px-4 py-2 text-xs transition-colors ${
-                activa === cat
-                  ? 'border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-bg)]'
-                  : 'border-[var(--color-line)] text-[var(--color-muted)]'
-              }`}
+              key={c.id}
+              role="tab"
+              aria-selected={activa === c.id}
+              onClick={() => setActiva(c.id)}
+              className="font-mono-label relative shrink-0 rounded-full px-4 py-2 text-xs"
             >
-              {cat}
+              {activa === c.id && (
+                <motion.span
+                  layoutId="menu-pill"
+                  transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  className="absolute inset-0 rounded-full bg-[var(--color-ink)]"
+                />
+              )}
+              <span className={`relative ${activa === c.id ? 'text-[var(--color-bg)]' : 'text-[var(--color-muted)]'}`}>
+                {c.nombre}
+              </span>
             </button>
           ))}
         </div>
+      </div>
 
-        <StaggerReveal key={activa} className="mt-10 divide-y divide-[var(--color-line)]">
-          {platillos
-            .filter((p) => p.categoria === activa)
-            .map((p) => (
-              <StaggerItem key={p.nombre} className="flex items-baseline justify-between gap-4 py-4">
-                <div>
-                  <h3 className="font-medium">{p.nombre}</h3>
-                  <p className="mt-1 text-sm text-[var(--color-muted)]">{p.descripcion}</p>
+      <div className="mx-auto max-w-4xl px-6">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={cat.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mt-10 space-y-12"
+          >
+            {cat.grupos.map((g) => (
+              <div key={g.titulo}>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 border-b border-[var(--color-ink)] pb-2">
+                  <h3 className="font-display text-2xl">{g.titulo}</h3>
+                  {g.nota && <span className="text-xs text-[var(--color-muted)]">{g.nota}</span>}
                 </div>
-                <span className="font-mono-label shrink-0 text-[var(--color-accent)]">
-                  {p.precio}
-                </span>
-              </StaggerItem>
+                <ul className="divide-y divide-[var(--color-line)]">
+                  {g.items.map((p) => (
+                    <li key={p.id} className="flex flex-wrap items-center justify-between gap-3 py-3.5">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="flex items-center gap-2 font-medium">
+                          {p.nombre}
+                          {p.fav && (
+                            <span title="Favorito de la casa" className="text-[var(--color-accent)]">
+                              <Star size={13} className="fill-current" />
+                            </span>
+                          )}
+                        </h4>
+                        {p.descripcion && <p className="mt-0.5 text-sm text-[var(--color-muted)]">{p.descripcion}</p>}
+                      </div>
+                      <div className="flex gap-2">
+                        {p.grande ? (
+                          <>
+                            <AddBtn item={p} tam="chico" precio={p.precio} />
+                            <AddBtn item={p} tam="grande" precio={p.grande} />
+                          </>
+                        ) : (
+                          <AddBtn item={p} tam="unico" precio={p.precio} />
+                        )}
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-        </StaggerReveal>
+          </motion.div>
+        </AnimatePresence>
+        <p className="mt-10 text-center text-xs text-[var(--color-muted)]">
+          <Star size={11} className="mr-1 inline fill-current text-[var(--color-accent)]" />
+          Favoritos de la casa · Precios en MXN, pueden variar en plataformas de reparto.
+        </p>
       </div>
     </section>
   )
