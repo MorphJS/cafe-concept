@@ -15,6 +15,8 @@ export interface Grupo {
 export interface Categoria {
   id: string
   nombre: string
+  /** Foto ambientada de la categoria (banner arriba de la lista). */
+  imagen: string
   grupos: Grupo[]
 }
 
@@ -32,6 +34,7 @@ export const categorias: Categoria[] = [
   {
     id: 'desayunos',
     nombre: 'Desayunos',
+    imagen: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24',
     grupos: [
       {
         titulo: 'Omelettes',
@@ -82,6 +85,7 @@ export const categorias: Categoria[] = [
   {
     id: 'calientes',
     nombre: 'Bebidas calientes',
+    imagen: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085',
     grupos: [
       {
         titulo: 'Café',
@@ -124,6 +128,7 @@ export const categorias: Categoria[] = [
   {
     id: 'frias',
     nombre: 'Bebidas frías',
+    imagen: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5',
     grupos: [
       {
         titulo: 'Smoothies, granizados y chamoyadas',
@@ -183,6 +188,7 @@ export const categorias: Categoria[] = [
   {
     id: 'salados',
     nombre: 'Chapatas y bagels',
+    imagen: 'https://images.unsplash.com/photo-1481070555726-e2fe8357725c',
     grupos: [
       {
         titulo: 'Bagels',
@@ -215,6 +221,7 @@ export const categorias: Categoria[] = [
   {
     id: 'ensaladas',
     nombre: 'Ensaladas',
+    imagen: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd',
     grupos: [
       {
         titulo: 'Base de lechuga y espinaca · aderezos de la casa',
@@ -235,6 +242,7 @@ export const categorias: Categoria[] = [
   {
     id: 'dulces',
     nombre: 'Antojos dulces',
+    imagen: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93',
     grupos: [
       {
         titulo: 'Antojos',

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navbar } from './components/Navbar'
 import { Hero } from './components/Hero'
 import { Menu } from './components/Menu'
+import { Gallery } from './components/Gallery'
 import { Delivery } from './components/Delivery'
 import { Location } from './components/Location'
 import { Footer } from './components/Footer'
@@ -19,8 +20,9 @@ function App() {
         <Navbar />
         <main>
           {/* el hero se renderiza debajo de las puertas; su texto entra cuando se abren */}
-          <Hero delay={intro ? 1.9 : 0.1} />
+          <Hero delay={intro ? 1.3 : 0.1} />
           <Menu />
+          <Gallery />
           <Delivery />
           <Location />
         </main>

@@ -54,7 +54,7 @@ export function DoorIntro({ onDone }: { onDone: () => void }) {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
-    const t = setTimeout(() => setFase('abierta'), 1300)
+    const t = setTimeout(() => setFase('abierta'), 900)
     const esc = (e: KeyboardEvent) => e.key === 'Escape' && setFase('abierta')
     window.addEventListener('keydown', esc)
     return () => {

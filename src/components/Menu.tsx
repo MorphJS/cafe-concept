@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Plus, Star } from 'lucide-react'
+import { Eye, Plus, ShoppingBag, Star } from 'lucide-react'
 import { categorias } from '../data/menu'
 import type { Item } from '../data/menu'
 import { useCart } from '../lib/cart'
@@ -30,6 +30,16 @@ function AddBtn({ item, tam, precio }: { item: Item; tam: 'unico' | 'chico' | 'g
   )
 }
 
+/** Precio en modo solo-visual: sin boton, solo el numero. */
+function PrecioTexto({ tam, precio }: { tam: 'unico' | 'chico' | 'grande'; precio: number }) {
+  const label = tam === 'unico' ? '' : tam === 'chico' ? 'Ch ' : 'Gde '
+  return (
+    <span className="font-mono-label text-xs text-[var(--color-muted)]">
+      {label}${precio}
+    </span>
+  )
+}
+
 /**
  * Menu completo (datos reales del sitio actual) con:
  * - tabs pegajosos y scrolleables (antes: una lista plana sin fotos)
@@ -38,6 +48,7 @@ function AddBtn({ item, tam, precio }: { item: Item; tam: 'unico' | 'chico' | 'g
  */
 export function Menu() {
   const [activa, setActiva] = useState(categorias[0].id)
+  const [pedidoActivo, setPedidoActivo] = useState(false)
   const cat = categorias.find((c) => c.id === activa)!
 
   return (
@@ -46,11 +57,25 @@ export function Menu() {
         <RevealOnScroll className="text-center">
           <span className="font-mono-label text-xs text-[var(--color-accent)]">Nuestro menú</span>
           <h2 className="font-display mt-4 text-4xl font-medium tracking-tight md:text-5xl">
-            Elige, agrega y pide
+            Un menú para antojarte
           </h2>
           <p className="mx-auto mt-3 max-w-md text-[var(--color-muted)]">
-            Toca el precio para sumarlo a tu pedido. Al final lo enviamos por WhatsApp.
+            {pedidoActivo
+              ? 'Toca el precio para sumarlo a tu pedido. Al final lo enviamos por WhatsApp.'
+              : 'Échale un ojo. Si te dan ganas de pedir, activa el modo pedido.'}
           </p>
+
+          <button
+            onClick={() => setPedidoActivo((v) => !v)}
+            className={`font-mono-label mx-auto mt-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs transition-colors ${
+              pedidoActivo
+                ? 'border-[var(--color-accent)] bg-[var(--color-accent)] text-white'
+                : 'border-[var(--color-line)] text-[var(--color-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]'
+            }`}
+          >
+            {pedidoActivo ? <ShoppingBag size={13} /> : <Eye size={13} />}
+            {pedidoActivo ? 'Modo pedido activado' : 'Solo estoy viendo · activar pedido'}
+          </button>
         </RevealOnScroll>
       </div>
 
@@ -87,8 +112,21 @@ export function Menu() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="mt-10 space-y-12"
+            className="mt-10"
           >
+            <div className="relative aspect-[16/6] w-full overflow-hidden rounded-2xl bg-[var(--color-line)]">
+              <img
+                src={`${cat.imagen}?auto=format&fit=crop&w=1200&q=80`}
+                alt={cat.nombre}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
+              <h3 className="font-display absolute bottom-4 left-5 text-2xl text-white md:text-3xl">{cat.nombre}</h3>
+            </div>
+
+            <div className="space-y-12 pt-10">
             {cat.grupos.map((g) => (
               <div key={g.titulo}>
                 <div className="flex flex-wrap items-baseline justify-between gap-x-4 border-b border-[var(--color-ink)] pb-2">
@@ -110,13 +148,22 @@ export function Menu() {
                         {p.descripcion && <p className="mt-0.5 text-sm text-[var(--color-muted)]">{p.descripcion}</p>}
                       </div>
                       <div className="flex gap-2">
-                        {p.grande ? (
+                        {pedidoActivo ? (
+                          p.grande ? (
+                            <>
+                              <AddBtn item={p} tam="chico" precio={p.precio} />
+                              <AddBtn item={p} tam="grande" precio={p.grande} />
+                            </>
+                          ) : (
+                            <AddBtn item={p} tam="unico" precio={p.precio} />
+                          )
+                        ) : p.grande ? (
                           <>
-                            <AddBtn item={p} tam="chico" precio={p.precio} />
-                            <AddBtn item={p} tam="grande" precio={p.grande} />
+                            <PrecioTexto tam="chico" precio={p.precio} />
+                            <PrecioTexto tam="grande" precio={p.grande} />
                           </>
                         ) : (
-                          <AddBtn item={p} tam="unico" precio={p.precio} />
+                          <PrecioTexto tam="unico" precio={p.precio} />
                         )}
                       </div>
                     </li>
@@ -124,6 +171,7 @@ export function Menu() {
                 </ul>
               </div>
             ))}
+            </div>
           </motion.div>
         </AnimatePresence>
         <p className="mt-10 text-center text-xs text-[var(--color-muted)]">

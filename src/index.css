@@ -7,13 +7,13 @@
   --font-script: "Caveat", cursive;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* --- paleta (light): calida, tierra, cafe -- no negro con neon --- */
-  --color-bg: #faf6f1;
+  /* --- paleta (light): clara, cremosa, calida -- mas aire, menos peso --- */
+  --color-bg: #fdfbf8;
   --color-surface: #ffffff;
-  --color-ink: #2b211a;
-  --color-muted: #7a6a5c;
-  --color-line: #e8ddd1;
-  --color-accent: #b5652b;
+  --color-ink: #4a3a2e;
+  --color-muted: #9c8a7a;
+  --color-line: #f0e6d9;
+  --color-accent: #c98a4b;
 }
 
 :root {
