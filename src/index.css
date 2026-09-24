@@ -7,13 +7,13 @@
   --font-script: "Caveat", cursive;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* --- paleta (light): clara, cremosa, calida -- mas aire, menos peso --- */
-  --color-bg: #fdfbf8;
+  /* --- paleta (light): calida, crema, con naranja vivo de acento --- */
+  --color-bg: #fdfaf5;
   --color-surface: #ffffff;
-  --color-ink: #4a3a2e;
-  --color-muted: #9c8a7a;
-  --color-line: #f0e6d9;
-  --color-accent: #c98a4b;
+  --color-ink: #3d2f22;
+  --color-muted: #9c8a76;
+  --color-line: #f2e6d5;
+  --color-accent: #ea6c2e;
 }
 
 :root {
@@ -22,22 +22,22 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --color-bg: #1a1410;
-    --color-surface: #241c16;
-    --color-ink: #f5ede3;
-    --color-muted: #a5937f;
-    --color-line: #362a20;
-    --color-accent: #d9853f;
+    --color-bg: #201510;
+    --color-surface: #2a1c15;
+    --color-ink: #f7ece0;
+    --color-muted: #b09a86;
+    --color-line: #3d2a1e;
+    --color-accent: #ff7a3d;
   }
 }
 
 :root[data-theme="dark"] {
-  --color-bg: #1a1410;
-  --color-surface: #241c16;
-  --color-ink: #f5ede3;
-  --color-muted: #a5937f;
-  --color-line: #362a20;
-  --color-accent: #d9853f;
+  --color-bg: #201510;
+  --color-surface: #2a1c15;
+  --color-ink: #f7ece0;
+  --color-muted: #b09a86;
+  --color-line: #3d2a1e;
+  --color-accent: #ff7a3d;
 }
 
 body {

@@ -61,7 +61,7 @@ export function Navbar() {
       >
         <motion.div
           animate={{
-            paddingBlock: scrolled ? 10 : 20,
+            paddingBlock: scrolled ? 14 : 32,
             backgroundColor: scrolled ? 'color-mix(in srgb, var(--color-bg) 82%, transparent)' : 'transparent',
           }}
           transition={{ duration: 0.3 }}
