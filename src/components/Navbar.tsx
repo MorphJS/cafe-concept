@@ -61,7 +61,8 @@ export function Navbar() {
       >
         <motion.div
           animate={{
-            paddingBlock: scrolled ? 14 : 32,
+            paddingTop: scrolled ? 16 : 36,
+            paddingBottom: scrolled ? 16 : 24,
             backgroundColor: scrolled ? 'color-mix(in srgb, var(--color-bg) 82%, transparent)' : 'transparent',
           }}
           transition={{ duration: 0.3 }}
@@ -72,54 +73,56 @@ export function Navbar() {
               {NEGOCIO.nombre}
             </a>
 
-            <nav className="relative hidden gap-1 md:flex" aria-label="Principal">
-              {LINKS.map((l) => (
-                <a
-                  key={l.id}
-                  href={`#${l.id}`}
-                  className={`font-mono-label relative rounded-full px-4 py-2 text-xs transition-colors ${
-                    activa === l.id ? 'text-[var(--color-bg)]' : 'text-[var(--color-muted)] hover:text-[var(--color-ink)]'
-                  }`}
-                >
-                  {activa === l.id && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-[var(--color-ink)]"
-                    />
-                  )}
-                  <span className="relative">{l.label}</span>
-                </a>
-              ))}
-            </nav>
+            <div className="flex items-center gap-6">
+              <nav className="relative hidden gap-2 md:flex" aria-label="Principal">
+                {LINKS.map((l) => (
+                  <a
+                    key={l.id}
+                    href={`#${l.id}`}
+                    className={`font-mono-label relative inline-flex h-10 items-center rounded-full px-4 text-xs transition-colors ${
+                      activa === l.id ? 'text-[var(--color-bg)]' : 'text-[var(--color-muted)] hover:text-[var(--color-ink)]'
+                    }`}
+                  >
+                    {activa === l.id && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                        className="absolute inset-0 rounded-full bg-[var(--color-ink)]"
+                      />
+                    )}
+                    <span className="relative">{l.label}</span>
+                  </a>
+                ))}
+              </nav>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={pedir}
-                className="font-mono-label relative inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2.5 text-xs text-white"
-              >
-                <ShoppingBag size={14} />
-                <span className="hidden sm:inline">Mi pedido</span>
-                <AnimatePresence>
-                  {count > 0 && (
-                    <motion.span
-                      key={count}
-                      initial={{ scale: 0.5 }}
-                      animate={{ scale: 1 }}
-                      className="rounded-full bg-white px-1.5 text-[10px] text-[var(--color-accent)]"
-                    >
-                      {count}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </button>
-              <button
-                onClick={() => setMovil(true)}
-                aria-label="Abrir menú"
-                className="rounded-full border border-[var(--color-line)] p-2.5 md:hidden"
-              >
-                <MenuIcon size={16} />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={pedir}
+                  className="font-mono-label relative inline-flex h-10 items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 text-xs text-white"
+                >
+                  <ShoppingBag size={14} />
+                  <span className="hidden sm:inline">Mi pedido</span>
+                  <AnimatePresence>
+                    {count > 0 && (
+                      <motion.span
+                        key={count}
+                        initial={{ scale: 0.5 }}
+                        animate={{ scale: 1 }}
+                        className="rounded-full bg-white px-1.5 text-[10px] text-[var(--color-accent)]"
+                      >
+                        {count}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </button>
+                <button
+                  onClick={() => setMovil(true)}
+                  aria-label="Abrir menú"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] md:hidden"
+                >
+                  <MenuIcon size={16} />
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
